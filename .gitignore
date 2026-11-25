@@ -1,0 +1,24 @@
+# Données personnelles des élèves : ne jamais publier
+database.db
+*.db
+
+# Secrets
+mot_de_passe.txt
+secret_key.txt
+.env
+
+# Environnement Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Archives et builds
+cours.zip
+*.zip
+web/
+node_modules/
+
+# Ancienne version
+app_ancien.py
+/package-lock.json

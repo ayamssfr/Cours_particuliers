@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Cours particuliers</title>
+</head>
+<body>
+  <h1>Mes élèves</h1>
+
+  <form action="{{ url_for('add_student') }}" method="post">
+    <input name="name" placeholder="Nom" required>
+    <input name="level" placeholder="Niveau (ex : 3e)">
+    <input name="hourly_rate" type="number" step="0.5" placeholder="Tarif (€/h)" required>
+    <button type="submit">Ajouter</button>
+  </form>
+
+    <table border="1" cellpadding="5">
+    <tr>
+      <th>Élève</th>
+      <th>Niveau</th>
+      <th>Tarif (€/h)</th>
+      <th>Heures données</th>
+      <th>Total dû (€)</th>
+      <th>Total payé (€)</th>
+      <th>Reste à payer (€)</th>
+    </tr>
+    {% for s in students %}
+    <tr>
+      <td>{{ s["name"] }}</td>
+      <td>{{ s["level"] }}</td>
+      <td>{{ s["hourly_rate"] }}</td>
+      <td>{{ s["total_hours"] }}</td>
+      <td>{{ "%.2f"|format(s["total_due"]) }}</td>
+      <td>{{ "%.2f"|format(s["total_paid"]) }}</td>
+      <td>{{ "%.2f"|format(s["balance"]) }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h1>Mes séances</h1>
+
+  {% if students %}
+  <form action="{{ url_for('add_session') }}" method="post">
+    <select name="student_id" required>
+      {% for s in students %}
+        <option value="{{ s['id'] }}">{{ s["name"] }}</option>
+      {% endfor %}
+    </select>
+    <input name="date" type="date" required>
+    <input name="duration_hours" type="number" step="0.25" placeholder="Durée (h)" required>
+    <input name="subject" placeholder="Matière">
+    <br>
+    <textarea name="notes" rows="3" cols="50" placeholder="Commentaire sur le cours"></textarea>
+    <br>
+    <button type="submit">Enregistrer la séance</button>
+  </form>
+  {% else %}
+    <p>Ajoute d'abord un élève pour pouvoir enregistrer une séance.</p>
+  {% endif %}
+
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>Date</th>
+      <th>Élève</th>
+      <th>Durée (h)</th>
+      <th>Matière</th>
+      <th>Commentaire</th>
+    </tr>
+    {% for se in sessions %}
+    <tr>
+      <td>{{ se["date"] }}</td>
+      <td>{{ se["name"] }}</td>
+      <td>{{ se["duration_hours"] }}</td>
+      <td>{{ se["subject"] }}</td>
+      <td>{{ se["notes"] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h1>Mes paiements</h1>
+
+  {% if students %}
+  <form action="{{ url_for('add_payment') }}" method="post">
+    <select name="student_id" required>
+      {% for s in students %}
+        <option value="{{ s['id'] }}">{{ s["name"] }}</option>
+      {% endfor %}
+    </select>
+    <input name="date" type="date" required>
+    <input name="amount" type="number" step="0.5" placeholder="Montant (€)" required>
+    <button type="submit">Enregistrer le paiement</button>
+  </form>
+  {% else %}
+    <p>Ajoute d'abord un élève pour pouvoir enregistrer un paiement.</p>
+  {% endif %}
+
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>Date</th>
+      <th>Élève</th>
+      <th>Montant (€)</th>
+    </tr>
+    {% for p in payments %}
+    <tr>
+      <td>{{ p["date"] }}</td>
+      <td>{{ p["name"] }}</td>
+      <td>{{ p["amount"] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
